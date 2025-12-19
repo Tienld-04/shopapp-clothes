@@ -42,7 +42,7 @@ public class SecurityConfig {
     protected String Signer_Key;
 
     private final InvalidatedTokenRepository invalidatedTokenRepository;
-    private final String[] PUBLIC_ENDPOINTS = {"/auth/register", "/auth/login", "auth/logout", "auth/refresh"};
+    private final String[] PUBLIC_ENDPOINTS = {"/auth/register", "/auth/login", "/auth/logout", "/auth/refresh"};
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -67,6 +67,14 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     @Bean
+    public RoleHierarchy roleHierarchy() {
+        return RoleHierarchyImpl.fromHierarchy("""
+            ROLE_ADMIN > ROLE_STAFF
+            ROLE_STAFF > ROLE_USER
+            ROLE_USER > ROLE_GUEST
+        """);
+    }
+    @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
         converter.setAuthoritiesClaimName("scope");
@@ -88,14 +96,7 @@ public class SecurityConfig {
         decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(defaultValidator, blacklistValidator));
         return decoder;
     }
-    @Bean
-    public RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl.fromHierarchy("""
-            ROLE_ADMIN > ROLE_STAFF
-            ROLE_STAFF > ROLE_USER
-            ROLE_USER > ROLE_GUEST
-        """);
-    }
+
 //    @Bean
 //    public MethodSecurityExpressionHandler methodSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
 //        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();

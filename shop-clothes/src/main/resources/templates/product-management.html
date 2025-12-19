@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Quản lí sản phẩm web bán quần áo</title>
+    <link rel="stylesheet" th:href="@{/css/product-management.css}"/>
+</head>
+<body>
+<main class="dashboard">
+    <section class="panel">
+        <header class="panel__header">
+            <h1>Quản lí sản phẩm web bán quần áo</h1>
+        </header>
+        <div class="panel__tabs">
+            <button class="tab tab--active" type="button">Danh sách sản phẩm</button>
+            <button class="tab" type="button" id="btn-open-create">Thêm sản phẩm</button>
+        </div>
+        <div class="table-wrapper">
+            <table class="product-table">
+                <thead>
+                <tr>
+                    <th>Mã sản phẩm</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Mô tả</th>
+                    <th>Chất liệu</th>
+                    <th>Thương hiệu</th>
+                    <th>Thể loại</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(products)}">
+                    <td colspan="8" class="empty-state">Chưa có sản phẩm nào</td>
+                </tr>
+                <tr th:each="product : ${products}">
+                    <td th:text="${product.id}">1</td>
+                    <td>
+                        <div class="name-cell">
+                            <span class="name" th:text="${product.name}">Áo</span>
+                            <small th:text="${product.brand}">Thương hiệu</small>
+                        </div>
+                    </td>
+                    <td th:text="${product.price != null ? #numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT') : '0'}">
+                        0
+                    </td>
+                    <td th:text="${product.description}">Mô tả</td>
+                    <td th:text="${product.material}">Chất liệu</td>
+                    <td th:text="${product.brand}">Thương hiệu</td>
+                    <td th:text="${product.category}">Thể loại</td>
+                    <td class="actions-cell">
+                        <button type="button"
+                                class="action-btn action-btn--primary"
+                                data-action="edit"
+                                th:attr="data-id=${product.id},
+                                         data-name=${product.name},
+                                         data-price=${product.price},
+                                         data-description=${product.description},
+                                         data-material=${product.material},
+                                         data-brand=${product.brand},
+                                         data-category-name=${product.category}">
+                            Chỉnh sửa
+                        </button>
+                        <button type="button"
+                                class="action-btn action-btn--ghost"
+                                data-action="details"
+                                th:attr="data-id=${product.id}, data-name=${product.name}">
+                            Chi tiết
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel__pagination">
+            <button class="arrow" type="button" disabled>&larr;</button>
+            <span>01 / 01</span>
+            <button class="arrow" type="button">&rarr;</button>
+        </div>
+    </section>
+</main>
+
+<dialog id="create-dialog" class="modal">
+    <form id="create-product-form" class="modal__content" enctype="multipart/form-data">
+        <header class="modal__header">
+            <h2>Thêm sản phẩm</h2>
+            <button type="button" class="modal__close" data-close>&times;</button>
+        </header>
+        <div class="modal__body">
+            <label>Tên sản phẩm
+                <input name="name" required/>
+            </label>
+            <label>Giá
+                <input name="price" type="number" min="0" step="0.01" required/>
+            </label>
+            <label>Chất liệu
+                <input name="material" required/>
+            </label>
+            <label>Thương hiệu
+                <input name="brand"/>
+            </label>
+            <label>Thể loại
+                <select name="categoryId" required>
+                    <option value="" disabled selected>Chọn thể loại</option>
+                    <option th:each="cat : ${categories}"
+                            th:value="${cat.id}"
+                            th:text="${cat.name}"></option>
+                </select>
+            </label>
+            <label>Mô tả
+                <textarea name="description" rows="3"></textarea>
+            </label>
+            <div class="file-uploader">
+                <div class="file-uploader__header">
+                    <span>Hình ảnh sản phẩm</span>
+                    <small>Nhấn "+" để chọn nhiều file.</small>
+                </div>
+                <button type="button" id="btn-trigger-upload" class="chip chip--add">+</button>
+                <input id="create-images"
+                       class="file-input"
+                       type="file"
+                       name="images"
+                       accept="image/*"
+                       multiple>
+                <div id="create-image-preview" class="image-preview">
+                    <p class="empty-state">Chưa chọn ảnh nào.</p>
+                </div>
+            </div>
+        </div>
+        <footer class="modal__footer">
+            <button type="submit" class="action-btn action-btn--primary">Lưu sản phẩm</button>
+            <button type="button" class="action-btn action-btn--ghost" data-close>Đóng</button>
+        </footer>
+    </form>
+</dialog>
+
+<dialog id="update-dialog" class="modal">
+    <form id="update-product-form" class="modal__content" enctype="multipart/form-data">
+        <header class="modal__header">
+            <h2>Cập nhật sản phẩm</h2>
+            <button type="button" class="modal__close" data-close>&times;</button>
+        </header>
+        <input type="hidden" name="id"/>
+        <div class="modal__body">
+            <label>Tên sản phẩm
+                <input name="name" required/>
+            </label>
+            <label>Giá
+                <input name="price" type="number" min="0" step="0.01" required/>
+            </label>
+            <label>Chất liệu
+                <input name="material" required/>
+            </label>
+            <label>Thương hiệu
+                <input name="brand"/>
+            </label>
+            <label>Thể loại
+                <select name="categoryId" required>
+                    <option value="" disabled>Chọn thể loại</option>
+                    <option th:each="cat : ${categories}"
+                            th:value="${cat.id}"
+                            th:text="${cat.name}"></option>
+                </select>
+            </label>
+            <label>Mô tả
+                <textarea name="description" rows="3"></textarea>
+            </label>
+            <div class="file-uploader">
+                <div class="file-uploader__header">
+                    <span>Hình ảnh sản phẩm hiện tại</span>
+                </div>
+                <div id="update-current-images" class="image-preview">
+                    <p class="empty-state">Chưa có ảnh nào.</p>
+                </div>
+                <div class="file-uploader__header" style="margin-top: 20px;">
+                    <span>Thêm hình ảnh mới</span>
+                    <small>Nhấn "+" để chọn nhiều file.</small>
+                </div>
+                <button type="button" id="btn-trigger-update-upload" class="chip chip--add">+</button>
+                <input id="update-images"
+                       class="file-input"
+                       type="file"
+                       name="images"
+                       accept="image/*"
+                       multiple>
+                <div id="update-image-preview" class="image-preview">
+                    <p class="empty-state">Chưa chọn ảnh mới.</p>
+                </div>
+            </div>
+            <div class="detail-hint">
+                <p>Thêm chi tiết sau khi lưu thay đổi.</p>
+                <button type="button" id="open-detail-dialog" class="action-btn action-btn--ghost">Thêm chi tiết
+                </button>
+            </div>
+        </div>
+        <footer class="modal__footer">
+            <button type="submit" class="action-btn action-btn--primary">Cập nhật</button>
+            <button type="button" class="action-btn action-btn--ghost" data-close>Đóng</button>
+        </footer>
+    </form>
+</dialog>
+
+<dialog id="detail-dialog" class="modal">
+    <div class="modal__content">
+        <header class="modal__header">
+            <div>
+                <h2 id="detail-title">Chi tiết sản phẩm</h2>
+                <p id="detail-subtitle"></p>
+            </div>
+            <button type="button" class="modal__close" data-close>&times;</button>
+        </header>
+        <div class="modal__body">
+            <div id="detail-list" class="detail-list">
+                <p class="empty-state">Chưa có chi tiết nào.</p>
+            </div>
+            <form id="detail-form" class="detail-form">
+                <input type="hidden" name="productId" id="detail-product-id"/>
+                <h3>Thêm chi tiết mới</h3>
+                <div class="detail-form__grid">
+                    <label>Màu sắc
+                        <input name="color" required/>
+                    </label>
+                    <label>Size
+                        <input name="size" required/>
+                    </label>
+                    <label>Số lượng
+                        <input name="quantity" type="number" min="0" required/>
+                    </label>
+                    <label>Phụ thu giá
+                        <input name="priceAdjustment" type="number" step="0.01" min="0"/>
+                    </label>
+                </div>
+                <button type="submit" class="action-btn action-btn--primary">Lưu chi tiết</button>
+            </form>
+        </div>
+    </div>
+</dialog>
+
+<script type="module" th:src="@{/js/product-management.js}"></script>
+</body>
+</html>

@@ -6,15 +6,18 @@ import com.example.shop_clothes.repository.UserRepository;
 import com.example.shop_clothes.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    @GetMapping("/my-info")
+    public ResponseEntity<UserResponse> getUser() {
+        UserResponse userResponse = userService.getMyInfo();
+        return ResponseEntity.ok(userResponse);
+    }
+
 
 }

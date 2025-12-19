@@ -7,4 +7,5 @@ import com.example.shop_clothes.dto.user.UserResponse;
 public interface UserService {
     UserResponse createUser(UserCreateRequest userCreateRequest );
     UserResponse createUserWithGoogle(LoginGoogleDTO loginGoogleDTO);
+    UserResponse getMyInfo();
 }

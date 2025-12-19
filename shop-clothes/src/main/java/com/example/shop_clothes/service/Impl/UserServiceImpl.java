@@ -14,6 +14,7 @@ import com.example.shop_clothes.repository.UserRepository;
 import com.example.shop_clothes.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -70,5 +71,17 @@ public class UserServiceImpl implements UserService {
             return userMapper.toUserResponse(userRepository.save(user));
         }
     }
+
+    @Override
+    public UserResponse getMyInfo() {
+        var context = SecurityContextHolder.getContext();
+        String email = context.getAuthentication().getName();
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        return userMapper.toUserResponse(user);
+    }
+
 
 }

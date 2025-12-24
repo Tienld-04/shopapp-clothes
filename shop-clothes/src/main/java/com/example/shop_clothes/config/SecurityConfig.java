@@ -54,6 +54,7 @@ public class SecurityConfig {
                         .requestMatchers("/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/categories/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/cart/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest()
                         .authenticated())
                 .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/auth/login/google", true)

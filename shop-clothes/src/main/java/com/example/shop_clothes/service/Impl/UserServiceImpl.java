@@ -8,8 +8,10 @@ import com.example.shop_clothes.exception.ApplicationException;
 import com.example.shop_clothes.exception.ErrorCode;
 import com.example.shop_clothes.mapper.UserMapper;
 import com.example.shop_clothes.model.Role;
+import com.example.shop_clothes.model.ShoppingCart;
 import com.example.shop_clothes.model.User;
 import com.example.shop_clothes.repository.RoleRepository;
+import com.example.shop_clothes.repository.ShoppingCartRepository;
 import com.example.shop_clothes.repository.UserRepository;
 import com.example.shop_clothes.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private  final RoleRepository roleRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
 
     @Override
     public UserResponse createUser(UserCreateRequest userCreateRequest) {
@@ -48,6 +51,10 @@ public class UserServiceImpl implements UserService {
         user.setRoles(roles);
         user.setIsActive(true);
         user.setProvider(AuthProvider.LOCAL);
+
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUser(user);
+        shoppingCartRepository.save(shoppingCart);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
@@ -68,6 +75,9 @@ public class UserServiceImpl implements UserService {
             Set<Role> roles = new HashSet<>();
             roles.add(role);
             user.setRoles(roles);
+            ShoppingCart shoppingCart = new ShoppingCart();
+            shoppingCart.setUser(user);
+            shoppingCartRepository.save(shoppingCart);
             return userMapper.toUserResponse(userRepository.save(user));
         }
     }

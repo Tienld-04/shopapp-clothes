@@ -21,7 +21,8 @@ public enum ErrorCode {
     USER_NOT_EXISTED(2002, "User does not exist in the system.", HttpStatus.NOT_FOUND),
 
     PHONENUMBER_EXISTED(2003, "Phone number already exists.", HttpStatus.CONFLICT),
-    CATEGORY_EXISTED(2003, "Category already exists.", HttpStatus.CONFLICT)
+    CATEGORY_EXISTED(2003, "Category already exists.", HttpStatus.CONFLICT),
+    SHOPPINGCART_NOT_EXISTED(2003, "Shopping cart already exists.", HttpStatus.NOT_FOUND)
     ;
     ErrorCode(int code, String message , HttpStatusCode httpStatusCode) {
         this.message = message;

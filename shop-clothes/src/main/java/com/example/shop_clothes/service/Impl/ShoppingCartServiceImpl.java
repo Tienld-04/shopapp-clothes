@@ -32,16 +32,16 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
         Product product = productRepository.findById(cartItemRequest.getProductId()).get();
         ProductDetail productDetail = productDetailRepository.findById(cartItemRequest.getProductDetailId()).get();
-        if (productDetail.getQuantity() == 0) {
+        if (productDetail.getQuantity() < cartItemRequest.getQuantity()) {
             throw new RuntimeException("không đủ hàng trong kho");
         }
         CartItem cartItem = cartItemRepository.findByProductDetail_Id(cartItemRequest.getProductDetailId());
         if (cartItem != null) {
-            cartItem.setQuantity(cartItem.getQuantity() + 1);
+            cartItem.setQuantity(cartItem.getQuantity() + cartItemRequest.getQuantity());
         } else {
             cartItem = new CartItem();
             cartItem.setCart(shoppingCart);
-            cartItem.setQuantity(1);
+            cartItem.setQuantity(cartItemRequest.getQuantity());
             cartItem.setPrice(product.getPrice() + productDetail.getPriceAdjustment());
             cartItem.setProduct(product);
             cartItem.setProductDetail(productDetail);

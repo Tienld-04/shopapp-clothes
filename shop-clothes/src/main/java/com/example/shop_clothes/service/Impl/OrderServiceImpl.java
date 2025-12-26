@@ -37,13 +37,19 @@ public class OrderServiceImpl implements OrderService {
         PaymentMethod paymentMethod = PaymentMethod.fromDisplayName(orderFromShopingCartRequest.getPaymentMethod());
         ShippingMethod shippingMethod = ShippingMethod.fromDisplayName(orderFromShopingCartRequest.getShippingMethod());
         Float shippingFee = shippingMethod.getFee();
-
         String address = user.getAddress();
+        if(address == null || address.isEmpty()){
+            throw new RuntimeException("Vui lòng cập nhật địa chỉ giao hàng");
+        }
+        if(user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty()){
+            throw new RuntimeException("Vui lòng cập nhật số điện  thoại");
+        }
         String note = orderFromShopingCartRequest.getNote();
         List<CartItem> cartItems = cartItemRepository.findByIdIn(orderFromShopingCartRequest.getCartItemIds());
         if (cartItems.isEmpty()) {
             throw new RuntimeException("Không tìm thấy sản phẩm trong giỏ hàng");
         }
+
 //        Order order = Order.builder()
 //                .user(user)
 //                .email(email)
@@ -70,10 +76,10 @@ public class OrderServiceImpl implements OrderService {
         order.setPhoneNumber(user.getPhoneNumber());
         order.setShippingAddress(address);
         order.setOrderDate(LocalDateTime.now());
-        order.setShippingDate(LocalDate.now());
+        order.setShippingDate(LocalDate.now().plusDays(1));
         order.setStatus(OrderStatus.PENDING);
         order.setActive(true);
-        order.setTrackingNumber("123");
+        //order.setTrackingNumber("");
 
         Order saveOrder = orderRepository.save(order);
         Float totalMoney = 0f;
@@ -81,10 +87,14 @@ public class OrderServiceImpl implements OrderService {
         for (CartItem cartItem : cartItems) {
             Float itemTotalMoney = cartItem.getPrice() * cartItem.getQuantity();
             ProductDetail productDetail = productDetailRepository.findById(cartItem.getProductDetail().getId()).orElseThrow(() -> new RuntimeException("Chi tiết sản phẩm không tồn tại"));
+            if(productDetail.getQuantity() < cartItem.getQuantity()) {
+                throw new RuntimeException("Không đủ hàng trong kho");
+            }
             OrderDetail orderDetail = OrderDetail.builder()
                     .order(saveOrder)
                     .product(cartItem.getProduct())
                     .productDetail(cartItem.getProductDetail())
+                    .size(productDetail.getSize())
                     .color(productDetail.getColor())
                     .price(cartItem.getPrice())
                     .numberOfProducts(cartItem.getQuantity())

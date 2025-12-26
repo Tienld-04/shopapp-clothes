@@ -37,3 +37,12 @@ jwt:
   signerKey: "${JWT_SIGNER_KEY}"
   valid-duration: 86400
   refreshable-duration: 3000000
+vnpay:
+  tmn-code: "{VNP_TMNCODE}"
+  hash-secret: "{VNP_HASHSECRET}"
+  pay-url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+  return-url: "http://localhost:8080/api/vnpay/return"
+  version: "2.1.0"
+  command: "pay"
+  curr-code: "VND"
+  locale: "vn"

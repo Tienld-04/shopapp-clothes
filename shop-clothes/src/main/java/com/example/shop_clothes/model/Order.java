@@ -1,5 +1,6 @@
 package com.example.shop_clothes.model;
 
+import com.example.shop_clothes.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -8,7 +9,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -66,7 +68,7 @@ public class Order extends  BaseEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails;
 
-    public enum OrderStatus {
-        pending, paid, processing, shipped, delivered, cancelled
-    }
+//    public enum OrderStatus {
+//        pending, paid, processing, shipped, delivered, cancelled
+//    }
 }

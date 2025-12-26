@@ -1,6 +1,6 @@
 package com.example.shop_clothes.service.Impl;
 
-import com.example.shop_clothes.dto.ShoppingCart.CartItemRequest;
+import com.example.shop_clothes.dto.shopingcart.CartItemRequest;
 import com.example.shop_clothes.exception.ApplicationException;
 import com.example.shop_clothes.exception.ErrorCode;
 import com.example.shop_clothes.model.*;

@@ -5,7 +5,8 @@ import lombok.*;
 
 @Entity
 @Table(name = "cart_items",uniqueConstraints = @UniqueConstraint(columnNames = {"cart_id", "product_detail_id"}))
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

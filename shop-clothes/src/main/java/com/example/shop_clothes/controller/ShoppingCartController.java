@@ -1,7 +1,6 @@
 package com.example.shop_clothes.controller;
 
-import com.example.shop_clothes.dto.ShoppingCart.CartItemRequest;
-import com.example.shop_clothes.model.ShoppingCart;
+import com.example.shop_clothes.dto.shopingcart.CartItemRequest;
 import com.example.shop_clothes.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

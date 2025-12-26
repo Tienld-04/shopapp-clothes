@@ -5,7 +5,8 @@ import lombok.*;
 
 @Entity
 @Table(name = "stock_receipt_details")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

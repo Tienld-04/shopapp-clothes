@@ -1,4 +1,4 @@
-package com.example.shop_clothes.dto.ShoppingCart;
+package com.example.shop_clothes.dto.shopingcart;
 
 import lombok.Getter;
 import lombok.Setter;

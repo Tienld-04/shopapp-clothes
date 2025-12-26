@@ -6,7 +6,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "shopping_carts")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

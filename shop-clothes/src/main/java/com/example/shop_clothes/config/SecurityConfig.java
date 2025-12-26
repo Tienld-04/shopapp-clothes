@@ -43,7 +43,7 @@ public class SecurityConfig {
     protected String Signer_Key;
 
     private final InvalidatedTokenRepository invalidatedTokenRepository;
-    private final String[] PUBLIC_ENDPOINTS = {"/auth/register", "/auth/login", "/auth/logout", "/auth/refresh", "/users/my-info", };
+    private final String[] PUBLIC_ENDPOINTS = {"/auth/register", "/auth/login", "/auth/logout", "/auth/refresh", "/users/my-info", "/payment", "/shipping" };
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity

@@ -9,7 +9,6 @@ public enum ShippingMethod {
 
     private final String displayName;
     private final Float fee;
-
     ShippingMethod(String displayName, Float fee) {
         this.displayName = displayName;
         this.fee = fee;

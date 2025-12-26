@@ -9,11 +9,9 @@ public enum PaymentMethod {
     VNPAY("Cổng thanh toán VNPay");
 
     private final String displayName;
-
     PaymentMethod(String displayName) {
         this.displayName = displayName;
     }
-
     public static PaymentMethod fromDisplayName(String value) {
         for (PaymentMethod method : values()) {
             if (method.displayName.equalsIgnoreCase(value)) {

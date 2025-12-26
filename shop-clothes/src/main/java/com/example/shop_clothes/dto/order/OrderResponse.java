@@ -19,7 +19,7 @@ public class OrderResponse {
 
     private Float shippingFee;
     private Float totalMoney;
-    private OrderStatus status;
+    private String status;
     private String message;
     private List<OrderItemDetailResponse> items;
 

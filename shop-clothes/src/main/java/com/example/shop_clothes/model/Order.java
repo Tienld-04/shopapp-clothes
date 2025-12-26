@@ -40,7 +40,7 @@ public class Order extends  BaseEntity {
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private OrderStatus status;
 
     @Column(name = "total_money")

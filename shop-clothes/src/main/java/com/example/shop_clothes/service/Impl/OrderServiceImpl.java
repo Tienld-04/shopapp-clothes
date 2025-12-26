@@ -120,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
                 .orderId(order.getId())
                 .shippingFee(saveOrder.getShippingFee())
                 .totalMoney(saveOrder.getTotalMoney())
-                .status(saveOrder.getStatus())
+                .status(saveOrder.getStatus().getDisplayName())
                 .message("Đặt hàng thành công")
                 .items(orderItemDetailResponseList)
                 .build();

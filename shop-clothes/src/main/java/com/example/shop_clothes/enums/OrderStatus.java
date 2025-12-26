@@ -1,19 +1,27 @@
 package com.example.shop_clothes.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public enum OrderStatus {
+    PENDING("Đã đặt hàng, chưa thanh toán"),
+    PAID("Đã thanh toán"),
+    PROCESSING("Đang xử lý đơn hàng"),
+    SHIPPED("Đã giao cho đơn vị vận chuyển"),
+    DELIVERED("Đã giao thành công"),
+    CANCELLED("Đơn hàng đã bị hủy");
 
-    PENDING("pending", "Đã đặt hàng, chưa thanh toán"),
-    PAID("paid", "Đã thanh toán"),
-    PROCESSING("processing", "Đang xử lý đơn hàng"),
-    SHIPPED("shipped", "Đã giao cho đơn vị vận chuyển"),
-    DELIVERED("delivered", "Đã giao thành công"),
-    CANCELLED("cancelled", "Đơn hàng đã bị hủy");
+    private final String displayName;
 
-    private final String code;
-    private final String description;
+    OrderStatus(String displayName) {
+        this.displayName = displayName;
+    }
+    public static OrderStatus fromDisplayName(String value) {
+        for (OrderStatus method : values()) {
+            if (method.displayName.equalsIgnoreCase(value)) {
+                return method;
+            }
+        }
+        throw new IllegalArgumentException("OrderStatus không hợp lệ: " + value);
+    }
 }

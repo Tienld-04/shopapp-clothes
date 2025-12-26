@@ -1,6 +1,8 @@
 package com.example.shop_clothes.model;
 
 import com.example.shop_clothes.enums.OrderStatus;
+import com.example.shop_clothes.enums.PaymentMethod;
+import com.example.shop_clothes.enums.ShippingMethod;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -44,8 +46,9 @@ public class Order extends  BaseEntity {
     @Column(name = "total_money")
     private Float totalMoney;
 
-    @Column(name = "shipping_method", length = 100)
-    private String shippingMethod;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "shipping_method", nullable = false)
+    private ShippingMethod shippingMethod;
 
     @Column(name = "shipping_address", length = 200)
     private String shippingAddress;
@@ -59,8 +62,9 @@ public class Order extends  BaseEntity {
     @Column(name = "tracking_number", length = 100)
     private String trackingNumber;
 
-    @Column(name = "payment_method", length = 100)
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method", nullable = false)
+    private PaymentMethod paymentMethod;
 
     @Column(name = "active")
     private Boolean active = true;

@@ -10,8 +10,7 @@ import java.util.List;
 public class OrderFromShopingCartRequest {
     private String note;
     private String shippingMethod;
-    private Float shippingFee;
+//    private Float shippingFee;
     private String paymentMethod;
-
     private List<Long> cartItemIds;
 }

@@ -14,4 +14,13 @@ public enum ShippingMethod {
         this.displayName = displayName;
         this.fee = fee;
     }
+    public static ShippingMethod fromDisplayName(String value) {
+        for (ShippingMethod method : values()) {
+            if (method.displayName.equalsIgnoreCase(value)) {
+                return method;
+            }
+        }
+        throw new IllegalArgumentException("ShippingMethod không hợp lệ: " + value);
+    }
+
 }

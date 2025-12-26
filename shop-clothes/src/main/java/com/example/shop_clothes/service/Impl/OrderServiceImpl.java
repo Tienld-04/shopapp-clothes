@@ -3,6 +3,8 @@ package com.example.shop_clothes.service.Impl;
 import com.example.shop_clothes.dto.order.OrderFromShopingCartRequest;
 import com.example.shop_clothes.dto.order.OrderResponse;
 import com.example.shop_clothes.enums.OrderStatus;
+import com.example.shop_clothes.enums.PaymentMethod;
+import com.example.shop_clothes.enums.ShippingMethod;
 import com.example.shop_clothes.model.*;
 import com.example.shop_clothes.repository.*;
 import com.example.shop_clothes.service.OrderService;
@@ -32,11 +34,12 @@ public class OrderServiceImpl implements OrderService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email);
         String name = user.getFullname();
+        PaymentMethod paymentMethod = PaymentMethod.fromDisplayName(orderFromShopingCartRequest.getPaymentMethod());
+        ShippingMethod shippingMethod = ShippingMethod.fromDisplayName(orderFromShopingCartRequest.getShippingMethod());
+        Float shippingFee = shippingMethod.getFee();
+
         String address = user.getAddress();
-        String shippingMethod =  orderFromShopingCartRequest.getShippingMethod();
-        Float shippingFee = orderFromShopingCartRequest.getShippingFee();
-        String note  = orderFromShopingCartRequest.getNote();
-        String payment = orderFromShopingCartRequest.getPaymentMethod();
+        String note = orderFromShopingCartRequest.getNote();
         List<CartItem> cartItems = cartItemRepository.findByIdIn(orderFromShopingCartRequest.getCartItemIds());
         if (cartItems.isEmpty()) {
             throw new RuntimeException("Không tìm thấy sản phẩm trong giỏ hàng");
@@ -59,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
         order.setUser(user);
         order.setNote(note);
         order.setShippingFee(shippingFee);
-        order.setPaymentMethod(payment);
+        order.setPaymentMethod(paymentMethod);
         order.setAddress(address);
         order.setShippingMethod(shippingMethod);
         order.setFullname(name);
@@ -74,10 +77,10 @@ public class OrderServiceImpl implements OrderService {
 
         Order saveOrder = orderRepository.save(order);
         Float totalMoney = 0f;
-        List<OrderResponse.OrderItemDetailResponse>  orderItemDetailResponseList = new ArrayList<>();
+        List<OrderResponse.OrderItemDetailResponse> orderItemDetailResponseList = new ArrayList<>();
         for (CartItem cartItem : cartItems) {
             Float itemTotalMoney = cartItem.getPrice() * cartItem.getQuantity();
-            ProductDetail productDetail = productDetailRepository.findById(cartItem.getId()).orElseThrow(()-> new RuntimeException("Chi tiết sản phẩm không tồn tại"));
+            ProductDetail productDetail = productDetailRepository.findById(cartItem.getProductDetail().getId()).orElseThrow(() -> new RuntimeException("Chi tiết sản phẩm không tồn tại"));
             OrderDetail orderDetail = OrderDetail.builder()
                     .order(saveOrder)
                     .product(cartItem.getProduct())
@@ -89,7 +92,11 @@ public class OrderServiceImpl implements OrderService {
                     .build();
             orderDetailRepository.save(orderDetail);
             totalMoney += itemTotalMoney;
-
+            // update quantity for productDetail;
+            Integer updateQuantity = productDetail.getQuantity() - cartItem.getQuantity();
+            productDetail.setQuantity(updateQuantity);
+            productDetailRepository.save(productDetail);
+            //
             OrderResponse.OrderItemDetailResponse orderItemDetailResponse = OrderResponse.OrderItemDetailResponse
                     .builder()
                     .productName(cartItem.getProduct().getName())
@@ -101,10 +108,10 @@ public class OrderServiceImpl implements OrderService {
                     .build();
             orderItemDetailResponseList.add(orderItemDetailResponse);
         }
-        Float finalTotal = totalMoney + (orderFromShopingCartRequest.getShippingFee() != null ? orderFromShopingCartRequest.getShippingFee() : 0f);
+        Float finalTotal = totalMoney + (shippingFee != null ? shippingFee : 0f);
         saveOrder.setTotalMoney(finalTotal);
         orderRepository.save(saveOrder);
-        cartItemRepository.deleteAll(cartItems);
+        //cartItemRepository.deleteAll(cartItems);
 
         return OrderResponse.builder()
                 .fullname(saveOrder.getFullname())

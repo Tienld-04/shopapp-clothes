@@ -56,7 +56,7 @@ public class VnpayUtil {
     }
 
     /**
-     * Xây dựng payment URL hoàn chỉnh
+     * Build payment URL
      */
     public static String buildPaymentUrl(String payUrl, Map<String, String> params) throws UnsupportedEncodingException {
         StringBuilder url = new StringBuilder(payUrl);
@@ -77,7 +77,7 @@ public class VnpayUtil {
 
     /**
      * Lấy IP address của client từ HTTP request
-     * Có xử lý proxy (X-Forwarded-For header)
+     * Xử lý proxy (X-Forwarded-For header)
      */
     public static String getClientIp(HttpServletRequest request) {
         String xForwardedFor = request.getHeader("X-Forwarded-For");

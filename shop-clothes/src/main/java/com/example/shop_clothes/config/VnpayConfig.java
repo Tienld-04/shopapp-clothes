@@ -30,4 +30,7 @@ public class VnpayConfig {
 
     @Value("${vnpay.locale}")
     private String locale;
+
+    @Value("${vnpay.timeout-minutes}")
+    private Integer timeout;
 }

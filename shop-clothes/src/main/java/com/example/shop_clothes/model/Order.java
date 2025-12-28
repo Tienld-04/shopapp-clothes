@@ -3,6 +3,7 @@ package com.example.shop_clothes.model;
 import com.example.shop_clothes.enums.OrderStatus;
 import com.example.shop_clothes.enums.PaymentMethod;
 import com.example.shop_clothes.enums.ShippingMethod;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -60,19 +61,25 @@ public class Order extends  BaseEntity {
     private Float shippingFee = 0f;
 
     @Column(name = "tracking_number", length = 100)
-    private String trackingNumber;
+    private String trackingNumber; //
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method", nullable = false)
     private PaymentMethod paymentMethod;
 
     @Column(name = "active")
-    private Boolean active = true;
+    private Boolean active = true; //
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails;
+    //
+    @Column(name = "payment_expire_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime paymentExpireTime;
 
-//    public enum OrderStatus {
-//        pending, paid, processing, shipped, delivered, cancelled
-//    }
+    @Column(name = "transaction_id")
+    private String transactionId;
+
+    @Column(name = "rollback_reason")
+    private String rollbackReason;
 }

@@ -3,6 +3,7 @@ package com.example.shop_clothes.dto.order;
 import com.example.shop_clothes.enums.OrderStatus;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -21,6 +22,8 @@ public class OrderResponse {
     private Float totalMoney;
     private String status;
     private String message;
+    private String paymentUrl;
+    private LocalDateTime paymentExpireTime;
     private List<OrderItemDetailResponse> items;
 
     @Data

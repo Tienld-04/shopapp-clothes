@@ -43,7 +43,8 @@ public class SecurityConfig {
     protected String Signer_Key;
 
     private final InvalidatedTokenRepository invalidatedTokenRepository;
-    private final String[] PUBLIC_ENDPOINTS = {"/auth/register", "/auth/login", "/auth/logout", "/auth/refresh", "/users/my-info", "/payment", "/shipping" };
+    private final String[] PUBLIC_ENDPOINTS = {"/auth/register", "/auth/login", "/auth/logout", "/auth/refresh", "/users/my-info", "/payments/**", "/shipping"};
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -67,18 +68,21 @@ public class SecurityConfig {
                         ));
         return httpSecurity.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public RoleHierarchy roleHierarchy() {
         return RoleHierarchyImpl.fromHierarchy("""
-            ROLE_ADMIN > ROLE_STAFF
-            ROLE_STAFF > ROLE_USER
-            ROLE_USER > ROLE_GUEST
-        """);
+                    ROLE_ADMIN > ROLE_STAFF
+                    ROLE_STAFF > ROLE_USER
+                    ROLE_USER > ROLE_GUEST
+                """);
     }
+
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
@@ -89,6 +93,7 @@ public class SecurityConfig {
         jwtConverter.setJwtGrantedAuthoritiesConverter(converter);
         return jwtConverter;
     }
+
     @Bean
     public JwtDecoder jwtDecoder() {
         SecretKeySpec secretKeySpec = new SecretKeySpec(Signer_Key.getBytes(), "HS512");

@@ -1,4 +1,4 @@
-package com.example.shop_clothes.Components;
+package com.example.shop_clothes.components;
 
 import com.example.shop_clothes.enums.OrderStatus;
 import com.example.shop_clothes.model.Order;

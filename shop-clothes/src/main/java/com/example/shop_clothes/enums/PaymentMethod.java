@@ -1,5 +1,7 @@
 package com.example.shop_clothes.enums;
 
+import com.example.shop_clothes.exception.ApplicationException;
+import com.example.shop_clothes.exception.ErrorCode;
 import lombok.Getter;
 
 @Getter
@@ -18,6 +20,6 @@ public enum PaymentMethod {
                 return method;
             }
         }
-        throw new IllegalArgumentException("PaymentMethod không hợp lệ: " + value);
+        throw new ApplicationException(ErrorCode.INVALID_PAYMENT_METHOD);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.shop_clothes.enums;
 
+import com.example.shop_clothes.exception.ApplicationException;
+import com.example.shop_clothes.exception.ErrorCode;
 import lombok.Getter;
 
 @Getter
@@ -26,6 +28,6 @@ public enum OrderStatus {
                 return method;
             }
         }
-        throw new IllegalArgumentException("OrderStatus không hợp lệ: " + value);
+        throw new ApplicationException(ErrorCode.INVALID_ORDER_STATUS);
     }
 }

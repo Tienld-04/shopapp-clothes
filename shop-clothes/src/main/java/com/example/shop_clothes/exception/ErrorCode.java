@@ -36,6 +36,11 @@ public enum ErrorCode {
     VNPAY_PAYMENT_FAILED(6001, "Lỗi tạo thanh toán VNPAY", HttpStatus.BAD_GATEWAY),
     VNPAY_PAYMENT_CONFIG_ERROR(6002, "Cấu hình thanh toán VNPAY không hợp lệ", HttpStatus.INTERNAL_SERVER_ERROR),
     VNPAY_PAYMENT_INVALID_REQUEST(6003, "Dữ liệu thanh toán không hợp lệ", HttpStatus.BAD_REQUEST),
+
+    INVALID_RECEIPT_STATUS(7001, "ReceiptStatus không hợp lệ", HttpStatus.BAD_REQUEST),
+    INVALID_SHIPPING_METHOD(7002, "ShippingMethod không hợp lệ", HttpStatus.BAD_REQUEST),
+    INVALID_ORDER_STATUS(7003, "OrderStatus không hợp lệ", HttpStatus.BAD_REQUEST),
+    INVALID_PAYMENT_METHOD(7004, "PaymentMethod không hợp lệ", HttpStatus.BAD_REQUEST),
     ;
     ErrorCode(int code, String message , HttpStatusCode httpStatusCode) {
         this.message = message;
